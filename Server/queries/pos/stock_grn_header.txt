@@ -1,0 +1,14 @@
+-- Create the stock_grn_header table
+CREATE TABLE stock_grn_header (
+    grn_number VARCHAR(255) PRIMARY KEY,
+    customer_id VARCHAR(255),
+    bill_number VARCHAR(255),
+    grn_user VARCHAR(255),
+    received_by_name VARCHAR(255),
+    received_by_nic VARCHAR(255),
+    received_by_signature VARCHAR(255),
+    grand_total NUMERIC,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (bill_number) REFERENCES stock_bill_header(bill_number)
+);

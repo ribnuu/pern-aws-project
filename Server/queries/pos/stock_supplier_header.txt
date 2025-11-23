@@ -1,0 +1,42 @@
+-- Create the table
+CREATE TABLE stock_supplier_header (
+    supplier_code CHAR(8) PRIMARY KEY CHECK (supplier_code ~ '^[0-9]{8}$'),
+    supplier_name VARCHAR(255) NOT NULL,
+    supplier_address TEXT,
+    phone_1 VARCHAR(15) NOT NULL CHECK (phone_1 ~ '^[0-9]{10,15}$'),
+    phone_2 VARCHAR(15) CHECK (phone_2 ~ '^[0-9]{10,15}$'),
+    website VARCHAR(255) CHECK (website ~ '^https?://.*'),
+    email VARCHAR(255) CHECK (email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
+    created_by INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- -- Create a trigger function to update the updated_at field
+-- CREATE OR REPLACE FUNCTION update_updated_at_column()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--     NEW.updated_at = NOW();
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- -- Create a trigger to automatically update the updated_at field on update
+-- CREATE TRIGGER update_stock_supplier_header_updated_at
+-- BEFORE UPDATE ON stock_supplier_header
+-- FOR EACH ROW
+-- EXECUTE FUNCTION update_updated_at_column();
+
+-- Insert sample records into stock_supplier_header
+INSERT INTO stock_supplier_header (supplier_code, supplier_name, supplier_address, phone_1, phone_2, website, email, created_by)
+VALUES
+    ('00000001', 'Fresh Produce Inc.', '123 Orchard Ave, Farmington, USA', '1234567890', '0987654321', 'https://www.freshproduce.com', 'info@freshproduce.com', 1),
+    ('00000002', 'Quality Meats Ltd.', '456 Butcher St, Carniville, USA', '2345678901', '9876543210', 'https://www.qualitymeats.com', 'info@qualitymeats.com', 1),
+    ('00000003', 'Dairy Delights Co.', '789 Creamery Rd, Milkville, USA', '3456789012', '8765432109', 'https://www.dairydelights.com', 'info@dairydelights.com', 2),
+    ('00000004', 'Bread Basket Bakery', '101 Baker Lane, Rollsville, USA', '4567890123', '7654321098', 'https://www.breadbasket.com', 'info@breadbasket.com', 2),
+    ('00000005', 'Seafood Sensations LLC', '202 Pier Blvd, Oceantown, USA', '5678901234', '6543210987', 'https://www.seafoodsensations.com', 'info@seafoodsensations.com', 3),
+    ('00000006', 'Green Grocer Gardens', '303 Farm Rd, Organicville, USA', '6789012345', '5432109876', 'https://www.greengrocer.com', 'info@greengrocer.com', 3),
+    ('00000007', 'Essential Spices Co.', '404 Spice Ave, Flavortown, USA', '7890123456', '4321098765', 'https://www.essentialspices.com', 'info@essentialspices.com', 4),
+    ('00000008', 'Beverage Bliss Ltd.', '505 Sip St, Drinksville, USA', '8901234567', '3210987654', 'https://www.beveragebliss.com', 'info@beveragebliss.com', 4),
+    ('00000009', 'Gourmet Treats Inc.', '606 Gourmet Rd, Snacktown, USA', '9012345678', '2109876543', 'https://www.gourmettreats.com', 'info@gourmettreats.com', 5),
+    ('00000010', 'Sweet Tooth Confections', '707 Sugar Lane, Dessertville, USA', '0123456789', '1098765432', 'https://www.sweettoothconfections.com', 'info@sweettoothconfections.com', 5);

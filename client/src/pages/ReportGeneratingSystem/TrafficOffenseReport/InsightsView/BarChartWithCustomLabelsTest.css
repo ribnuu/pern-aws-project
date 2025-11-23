@@ -1,0 +1,6 @@
+.chart-container {
+    width: 100%; /* Adjust width as necessary */
+    height: 380px; /* Fixed height */
+    overflow-y: auto; /* Enable vertical scrolling */
+  }
+  

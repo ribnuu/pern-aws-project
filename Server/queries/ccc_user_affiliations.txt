@@ -1,0 +1,9 @@
+CREATE TABLE ccc_user_affiliations (
+    id SERIAL PRIMARY KEY,
+    user_id VARCHAR(255) NOT NULL,
+    group_id INT NOT NULL,
+    role_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES ccc_user_masterfile(user_id),
+    FOREIGN KEY (group_id) REFERENCES ccc_user_group(user_group_id),
+    FOREIGN KEY (role_id) REFERENCES ccc_user_role(user_role_id)
+);

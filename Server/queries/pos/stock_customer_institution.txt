@@ -1,0 +1,10 @@
+CREATE TABLE stock_customer_institution (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),  -- Unique identifier using UUIDv4
+    name VARCHAR(255) NOT NULL,
+    address TEXT,
+    phone_1 VARCHAR(20),
+    phone_2 VARCHAR(20),
+    mobile_number VARCHAR(20),
+    email VARCHAR(255),
+    web VARCHAR(255)
+);

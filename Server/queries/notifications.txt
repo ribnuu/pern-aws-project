@@ -1,0 +1,35 @@
+-- Create notification_types table
+CREATE TABLE notification_types (
+    type_id SERIAL PRIMARY KEY,
+    type_name VARCHAR(50) UNIQUE NOT NULL,
+    description TEXT
+);
+
+-- Insert sample data into notification_types table
+INSERT INTO notification_types (type_name, description) VALUES
+('traffic-fine', 'Notification for traffic fines issued');
+
+
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    user_id VARCHAR(255),  -- user_id is now nullable
+    notification_type VARCHAR(50) NOT NULL,
+    title VARCHAR(255),
+    message TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    read_at TIMESTAMP,
+    related_id VARCHAR(255),
+    status VARCHAR(50) DEFAULT 'unread',
+    priority VARCHAR(50) DEFAULT 'medium',
+    mobile_number VARCHAR(20),  -- new field
+    FOREIGN KEY (user_id) REFERENCES ccc_user_masterfile(user_id),
+    FOREIGN KEY (notification_type) REFERENCES notification_types(type_name)
+);
+
+-- Insert sample data into notifications table
+INSERT INTO notifications (user_id, notification_type, title, message, created_at, read_at, related_id, status, priority) VALUES
+(1, 'fine', 'Parking Violation', 'You have been fined for illegal parking.', '2024-06-21 10:00:00', NULL, 101, 'unread', 'high'),
+(2, 'reminder', 'Payment Due', 'Your subscription payment is due tomorrow.', '2024-06-21 09:00:00', '2024-06-21 12:00:00', NULL, 'read', 'medium'),
+(1, 'warning', 'Speeding Alert', 'You were recorded speeding on Main Street.', '2024-06-20 15:00:00', NULL, 102, 'unread', 'high'),
+(3, 'reminder', 'Profile Update', 'Please update your profile information.', '2024-06-19 08:00:00', NULL, NULL, 'unread', 'low'),
+(2, 'fine', 'Noise Complaint', 'You have been fined for noise violation.', '2024-06-18 22:00:00', '2024-06-19 10:00:00', 103, 'read', 'high');

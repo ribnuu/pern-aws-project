@@ -1,0 +1,10 @@
+CREATE TABLE stock_item_detail (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    item_code VARCHAR(255) NOT NULL,
+    grn_number VARCHAR(255) NOT NULL,
+    batch_code VARCHAR(4) NOT NULL, -- Change from INTEGER to VARCHAR(4)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (item_code) REFERENCES stock_item_header(item_code),
+    FOREIGN KEY (grn_number) REFERENCES stock_grn_header(grn_number)
+);

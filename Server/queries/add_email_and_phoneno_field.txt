@@ -1,0 +1,4 @@
+ALTER TABLE ccc_user_masterfile
+ADD COLUMN email VARCHAR(255),
+ADD COLUMN mobile_number VARCHAR(20),
+ADD CONSTRAINT chk_email_format CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$');

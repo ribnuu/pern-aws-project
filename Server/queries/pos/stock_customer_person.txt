@@ -1,0 +1,7 @@
+CREATE TABLE stock_customer_person (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),  -- Unique identifier using UUIDv4
+    name VARCHAR(255) NOT NULL,
+    address TEXT,
+    mobile_number VARCHAR(20),
+    stock_customer_institution_id UUID REFERENCES stock_customer_institution(id) ON DELETE CASCADE  -- Foreign key reference
+);

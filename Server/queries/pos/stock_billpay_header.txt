@@ -1,0 +1,9 @@
+CREATE TABLE stock_billpay_header (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),  -- Unique identifier for each record (UUID v4)
+    bill_number VARCHAR(255) NOT NULL,
+    grand_total FLOAT NOT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    paid_status BOOLEAN DEFAULT FALSE
+);

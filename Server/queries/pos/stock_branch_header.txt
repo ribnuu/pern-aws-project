@@ -1,0 +1,12 @@
+CREATE TABLE stock_branch_header (
+    company_code CHAR(4) PRIMARY KEY,  -- Primary Key with exactly 4 characters
+    name VARCHAR(255),                 -- Adjust size as necessary for the name field
+    address VARCHAR(500),              -- Adjust size as necessary for the address field
+    phone_one VARCHAR(15),             -- Adjust size as necessary for phone numbers
+    phone_two VARCHAR(15),             -- Adjust size as necessary for phone numbers
+    email VARCHAR(255),                -- Adjust size as necessary for email
+    website VARCHAR(255),              -- Adjust size as necessary for website URLs
+    created_by VARCHAR(50),            -- Adjust size as necessary for creator's identifier
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

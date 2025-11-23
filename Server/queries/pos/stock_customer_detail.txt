@@ -1,0 +1,9 @@
+-- Create table stock_customer_detail
+CREATE TABLE stock_customer_detail (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    customer_code CHAR(16), -- Foreign key column
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_customer_code
+        FOREIGN KEY (customer_code) REFERENCES stock_customer_header (customer_code)
+);

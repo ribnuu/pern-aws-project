@@ -1,0 +1,38 @@
+This query deletes records from the stock_transaction_update table where there isn't a corresponding bill_number in the stock_bill_header table.
+It works by checking each record in stock_transaction_update and ensuring that for each transaction_id, there is a matching bill_number in the stock_bill_header table. 
+If no match is found, the record in stock_transaction_update is removed.
+DELETE FROM stock_transaction_update
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM stock_bill_header
+    WHERE stock_bill_header.bill_number = stock_transaction_update.transaction_id
+);
+
+
+This query updates the created_at and updated_at timestamps in the stock_transaction_update table.
+It sets these timestamps to match the values from the stock_bill_header table, but only for those 
+records where the transaction_id in stock_transaction_update matches the bill_number in stock_bill_header.
+UPDATE stock_transaction_update
+SET
+    created_at = stock_bill_header.created_at,
+    updated_at = stock_bill_header.updated_at
+FROM stock_bill_header
+WHERE stock_transaction_update.transaction_id = stock_bill_header.bill_number;
+
+
+
+To delete records from the stock_billpay_detail table where the bill_number is in a list of values (e.g., 1, 2, 3, 4),
+DELETE FROM stock_billpay_detail
+WHERE bill_number IN ('080072821582616280824');
+
+
+
+The query deletes records from the stock_bill_detail table where there isn't a corresponding bill_number in the stock_bill_header table.
+The NOT EXISTS clause checks each record in stock_bill_detail and ensures that for each bill_number, there is a matching bill_number in the stock_bill_header table.
+If no match is found, the record in stock_bill_detail is deleted.
+DELETE FROM stock_bill_detail
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM stock_bill_header
+    WHERE stock_bill_header.bill_number = stock_bill_detail.bill_number
+);

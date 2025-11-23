@@ -1,0 +1,40 @@
+-- Create the table
+CREATE TABLE stock_item_category (
+    category_code CHAR(8) PRIMARY KEY CHECK (category_code ~ '^[0-9]{8}$'),
+    category_name VARCHAR(255) NOT NULL,
+    created_by INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- -- Create a trigger function to update the updated_at field
+-- CREATE OR REPLACE FUNCTION update_updated_at_column()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--     NEW.updated_at = NOW();
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- -- Create a trigger to update updated_at on every update
+-- CREATE TRIGGER update_stock_item_category_updated_at
+-- BEFORE UPDATE ON stock_item_category
+-- FOR EACH ROW
+-- EXECUTE FUNCTION update_updated_at_column();
+
+-- Insert food categories into stock_item_category
+INSERT INTO stock_item_category (category_code, category_name, created_by)
+VALUES
+    ('00000001', 'Fruits', 1),
+    ('00000002', 'Vegetables', 1),
+    ('00000003', 'Dairy Products', 2),
+    ('00000004', 'Bakery Items', 2),
+    ('00000005', 'Meat and Poultry', 3),
+    ('00000006', 'Seafood', 3),
+    ('00000007', 'Grains and Cereals', 4),
+    ('00000008', 'Snacks', 4),
+    ('00000009', 'Beverages', 5),
+    ('00000010', 'Condiments', 5);
+
+-- Check the inserted records
+SELECT * FROM stock_item_category;

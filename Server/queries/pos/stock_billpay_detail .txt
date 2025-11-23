@@ -1,0 +1,14 @@
+CREATE TABLE stock_billpay_detail (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),  -- Unique identifier for each record
+    bill_number VARCHAR(255) NOT NULL,
+    type_of_payment VARCHAR(20) NOT NULL,
+    tender_amount FLOAT NOT NULL,
+    balance FLOAT NOT NULL,
+    last4digits_of_card VARCHAR(4),  -- Relevant field for card details
+    type_of_card VARCHAR(50),          -- Relevant field for card type
+    created_by VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    payment_status BOOLEAN DEFAULT FALSE,
+    UNIQUE (bill_number, type_of_payment)  -- Ensure uniqueness of payment type for each bill
+);

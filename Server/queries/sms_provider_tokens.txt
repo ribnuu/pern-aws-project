@@ -1,0 +1,8 @@
+CREATE TABLE public.sms_provider_tokens (
+    token_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    access_token TEXT NOT NULL,
+    refresh_token TEXT NOT NULL,
+    provider_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)

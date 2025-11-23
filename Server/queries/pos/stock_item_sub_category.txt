@@ -1,0 +1,40 @@
+-- Create table stock_item_sub_category
+CREATE TABLE stock_item_sub_category (
+    sub_category_code CHAR(8) PRIMARY KEY,
+    sub_category_name VARCHAR(255) NOT NULL,
+    created_by VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    category_code CHAR(8), -- Foreign key column
+    CONSTRAINT fk_category_code
+        FOREIGN KEY (category_code) REFERENCES stock_item_category (category_code)
+);
+
+-- -- Create a trigger function to update the updated_at field
+-- CREATE OR REPLACE FUNCTION update_updated_at_column_subcategory()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--     NEW.updated_at = NOW();
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- -- Attach trigger to update updated_at on every update
+-- CREATE TRIGGER update_stock_item_sub_category_updated_at
+-- BEFORE UPDATE ON stock_item_sub_category
+-- FOR EACH ROW
+-- EXECUTE FUNCTION update_updated_at_column_subcategory();
+
+-- Insert sample records
+INSERT INTO stock_item_sub_category (sub_category_code, sub_category_name, created_by, category_code)
+VALUES
+    ('00000001', 'Citrus Fruits', 'user1', '00000001'),
+    ('00000002', 'Root Vegetables', 'user1', '00000002'),
+    ('00000003', 'Milk Products', 'user2', '00000003'),
+    ('00000004', 'Breads', 'user2', '00000004'),
+    ('00000005', 'Poultry', 'user3', '00000005'),
+    ('00000006', 'Fish', 'user3', '00000006'),
+    ('00000007', 'Rice', 'user4', '00000007'),
+    ('00000008', 'Chips and Snacks', 'user4', '00000008'),
+    ('00000009', 'Juices', 'user5', '00000009'),
+    ('00000010', 'Sauces', 'user5', '00000010');

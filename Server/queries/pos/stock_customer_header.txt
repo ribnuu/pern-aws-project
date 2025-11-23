@@ -1,0 +1,8 @@
+CREATE TABLE stock_customer_header (
+    customer_code CHAR(16) PRIMARY KEY CHECK (customer_code ~ '^[0-9]{16}$'),
+    customer_name VARCHAR(255) NOT NULL,
+    customer_number VARCHAR(15) NOT NULL CHECK (customer_number ~ '^[0-9]{10,15}$'),
+    created_by VARCHAR(100),                            -- Added field for tracking who created the record
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

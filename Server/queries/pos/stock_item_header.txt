@@ -1,0 +1,46 @@
+-- Create the table
+CREATE TABLE stock_item_header (
+    item_code CHAR(8) PRIMARY KEY CHECK (item_code ~ '^[0-9]{8}$'),
+    item_name VARCHAR(255) NOT NULL,
+    item_category CHAR(8),
+    item_sub_category CHAR(8),
+    supplier CHAR(8),
+    created_by INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_item_category
+        FOREIGN KEY (item_category) REFERENCES stock_item_category (category_code),
+    CONSTRAINT fk_item_sub_category
+        FOREIGN KEY (item_sub_category) REFERENCES stock_item_sub_category (sub_category_code),
+    CONSTRAINT fk_supplier
+        FOREIGN KEY (supplier) REFERENCES stock_supplier_header (supplier_code)
+);
+
+-- -- Create a trigger function to update the updated_at field
+-- CREATE OR REPLACE FUNCTION update_updated_at_column_item()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--     NEW.updated_at = NOW();
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- -- Create a trigger to automatically update the updated_at field on update
+-- CREATE TRIGGER update_stock_item_header_updated_at
+-- BEFORE UPDATE ON stock_item_header
+-- FOR EACH ROW
+-- EXECUTE FUNCTION update_updated_at_column_item();
+
+-- Insert sample records
+INSERT INTO stock_item_header (item_code, item_name, item_category, item_sub_category, supplier, created_by)
+VALUES
+    ('00000001', 'Apple', '00000001', '00000001', '00000001', 1),
+    ('00000002', 'Tomato', '00000001', '00000002', '00000001', 1),
+    ('00000003', 'Cheddar Cheese', '00000003', '00000003', '00000003', 2),
+    ('00000004', 'Baguette', '00000004', '00000004', '00000004', 2),
+    ('00000005', 'Chicken Breast', '00000005', '00000005', '00000005', 3),
+    ('00000006', 'Salmon Fillet', '00000006', '00000006', '00000006', 3),
+    ('00000007', 'Basmati Rice', '00000007', '00000007', '00000007', 4),
+    ('00000008', 'Potato Chips', '00000008', '00000008', '00000008', 4),
+    ('00000009', 'Orange Juice', '00000009', '00000009', '00000009', 5),
+    ('00000010', 'Soy Sauce', '00000010', '00000010', '00000010', 5)

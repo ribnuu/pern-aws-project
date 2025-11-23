@@ -1,0 +1,8 @@
+CREATE TABLE stock_supplier_detail (
+    id SERIAL PRIMARY KEY,
+    supplier_code VARCHAR(50) REFERENCES stock_supplier_header(supplier_code) ON DELETE SET NULL,
+    customer_code VARCHAR(50) REFERENCES stock_customer_header(customer_code) ON DELETE SET NULL,
+    created_by VARCHAR(50),  -- Adjust size/type as necessary
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

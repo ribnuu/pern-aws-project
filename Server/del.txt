@@ -1,0 +1,52 @@
+CREATE TABLE IF NOT EXISTS public.ccc_hotels
+(
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
+
+    name character varying(255) COLLATE pg_catalog."default" NOT NULL,
+
+    street_address character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    address_line_2 character varying(255) COLLATE pg_catalog."default",
+    province_id integer NOT NULL,
+    district_id integer NOT NULL,
+    city_id integer NOT NULL,
+    postal_code character varying(20) COLLATE pg_catalog."default",
+    location_url character varying(255) COLLATE pg_catalog."default",  -- Adjusted length
+
+    manager_contact_number character varying(20) COLLATE pg_catalog."default",
+    security_contact_number character varying(20) COLLATE pg_catalog."default",
+
+    website character varying(255) COLLATE pg_catalog."default",  -- Adjusted length
+    facebook character varying(255) COLLATE pg_catalog."default",  -- Adjusted length
+    instagram character varying(20) COLLATE pg_catalog."default",
+
+    rooms INTEGER CHECK (rooms >= 1 AND rooms <= 1000),
+
+    type character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    is_star_hotel boolean DEFAULT false,
+    rating INTEGER CHECK (rating >= 1 AND rating <= 7),  -- Fixed constraint for rating
+
+    description text COLLATE pg_catalog."default",
+
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    deleted_at timestamp without time zone,
+    created_by character varying(255) COLLATE pg_catalog."default",
+
+    CONSTRAINT ccc_hotels_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_created_by FOREIGN KEY (created_by)
+        REFERENCES public.ccc_user_masterfile (user_id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE SET NULL,
+    CONSTRAINT fk_district_id FOREIGN KEY (district_id)
+        REFERENCES public.ccc_master_district (district_id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT fk_province_id FOREIGN KEY (province_id)
+        REFERENCES public.ccc_master_province (province_id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT fk_city_id FOREIGN KEY (city_id)
+        REFERENCES public.ccc_master_city (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);

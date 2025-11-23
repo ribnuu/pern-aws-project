@@ -1,0 +1,10 @@
+-- Create the stock_grn_detail table
+CREATE TABLE stock_grn_detail (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    item_code VARCHAR(255),
+    item_qty NUMERIC,
+    cost NUMERIC,
+    mrp NUMERIC,
+    cost_total NUMERIC,
+    FOREIGN KEY (item_code) REFERENCES stock_item_header(item_code)
+);

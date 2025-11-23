@@ -1,0 +1,5 @@
+ALTER TABLE ccc_user_masterfile
+ADD COLUMN email_otp INTEGER CHECK (email_otp >= 100000 AND email_otp <= 999999),
+ADD COLUMN mobile_otp INTEGER CHECK (mobile_otp >= 100000 AND mobile_otp <= 999999),
+ADD COLUMN email_verified BOOLEAN DEFAULT FALSE,
+ADD COLUMN mobile_verified BOOLEAN DEFAULT FALSE;

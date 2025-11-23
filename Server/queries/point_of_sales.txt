@@ -1,0 +1,33 @@
+-- Connect to the database
+\c pos_db_kulfi_delight;
+
+-- Create the stock_bill_detail table with UUID as primary key
+CREATE TABLE stock_bill_detail (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    bill_number VARCHAR(50) NOT NULL,
+    item_code VARCHAR(50) NOT NULL,
+    quantity INTEGER NOT NULL,
+    amount NUMERIC(10, 2) NOT NULL,
+    total NUMERIC(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Inserting a sample bill detail
+INSERT INTO stock_bill_detail (bill_number, item_code, quantity, amount, total)
+VALUES ('BILL2024001', 'ITEM001', 2, 5.00, 10.00);
+
+CREATE TABLE stock_bill_header (
+    id SERIAL PRIMARY KEY,
+    bill_number VARCHAR(50) NOT NULL,
+    customer_name VARCHAR(255),
+    customer_number VARCHAR(20),
+    grand_total NUMERIC(12, 2),
+    type_of_payment VARCHAR(50),
+    tender_amount NUMERIC(12, 2),
+    balance NUMERIC(12, 2),
+    last4digits_of_card VARCHAR(4),
+    type_of_card VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,0 +1,11 @@
+-- Create table stock_balance_update
+CREATE TABLE stock_balance_update (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    item_code CHAR(8) NOT NULL,
+    batch_number VARCHAR(255) NOT NULL,
+    balance INTEGER NOT NULL,
+    item_cost DOUBLE PRECISION,
+    item_mrp DOUBLE PRECISION,
+    CONSTRAINT fk_item_code
+        FOREIGN KEY (item_code) REFERENCES stock_item_header (item_code)
+);

@@ -1,0 +1,42 @@
+}
+POST /api/user/loginWithMobileumber/confirmOtp - 0.246s
+POST /api/rights/get-landing-page-buttons-by-user-id - 1.123s
+POST /api/notifications - 0.688s
+POST /api/rights/get-landing-page-buttons-by-user-id - 0.993s
+POST /api/notifications/markAsRead - 0.159s
+GET /api/department-driver-offense-portal/offense-by-user - 0.711s
+GET /api/departmentDriversOffensePortal/offenseByRefNo/2024103119250036 - 0.085s
+POST /api/rights/get-landing-page-buttons-by-user-id - 0.488s
+POST /api/rights/get-buttons-by-user-and-page-id - 0.567s
+GET /api/department-driver-offense-portal/offense-by-user - 0.424s
+1 min check wes temp
+1 min check 24 hrs wes temp
+GET /api/departmentDriversOffensePortal/offenseByRefNo/2024110116350071 - 0.075s
+POST /api/hnb/create-signature - 0.003s
+1 min check wes temp
+1 min check 24 hrs wes temp
+1 min check wes temp
+1 min check 24 hrs wes temp
+
+
+
+
+
+
+
+1 min check wes temp
+1 min check 24 hrs wes temp
+Signature is valid
+
+
+POST /api/notifications - 0.081s
+POST /api/rights/get-landing-page-buttons-by-user-id - 0.876s
+1 min check wes temp
+1 min check 24 hrs wes temp
+1 min check wes temp
+1 min check 24 hrs wes temp
+
+
+
+
+

@@ -1,0 +1,59 @@
+.directory {
+    background: #242322;
+    font-family: monospace;
+    font-size: 16px;
+    color: white;
+    user-select: none;
+    padding: 20px;
+    border-radius: 0.4em;
+  }
+  
+  .directory .tree,
+  .directory .tree-node,
+  .directory .tree-node-group {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .directory .tree-branch-wrapper,
+  .directory .tree-node__leaf {
+    outline: none;
+    outline: none;
+  }
+  
+  /* .directory .tree-node {
+    cursor: pointer;
+  } */
+  
+  .directory .tree-node {
+    display: flex; /* Make icon and text appear side-by-side */
+    align-items: center; /* Vertically align the icon and text */
+}
+
+  .directory .tree-node:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .directory .tree .tree-node--focused {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .directory .tree .tree-node--selected {
+    background: rgba(48, 107, 176);
+  }
+  
+  .directory .tree-node__branch {
+    display: block;
+  }
+  
+  /* .directory .icon {
+    vertical-align: middle;
+    padding-right: 5px;
+  } */
+
+  .directory .icon {
+    vertical-align: middle;
+    padding-right: 5px;
+    display: inline-block; /* Ensure the icon is inline with the text */
+}

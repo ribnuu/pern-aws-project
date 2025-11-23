@@ -1,0 +1,12 @@
+/* Highlight the node when partially selected */
+.node.partial {
+    background-color: #e0f7fa; /* Light cyan background for highlighting */
+    font-weight: bold; /* Make the font bold */
+  }
+  
+  /* Optional: Style the checkbox in its indeterminate state */
+  .checkbox-item:indeterminate {
+    background-color: #acd3fd; /* Blue background for the checkbox */
+    border-color: #007bff; /* Match border color to checkbox */
+  }
+  

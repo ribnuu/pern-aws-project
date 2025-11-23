@@ -1,0 +1,21 @@
+.ticket-details {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+  }
+  
+  .ticket-details p {
+    margin: 5px 0;
+    font-size: 16px;
+  }
+  
+  .ticket-details p:first-child {
+    font-weight: bold;
+  }
+  
+  .ticket-details p:last-child {
+    margin-bottom: 0;
+  }
+  

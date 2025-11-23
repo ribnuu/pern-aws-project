@@ -1,0 +1,17 @@
+CREATE TYPE license_dispatched_status AS ENUM ('PENDING', 'DISPATCHED', 'DELIVERED', 'CANCELED');
+CREATE TYPE license_dispatched_method AS ENUM ('Courier', 'In-person', 'Postal', 'Digital', 'Other');
+
+CREATE TABLE department_drivers_license_dispatches (
+    id UUID NOT NULL DEFAULT uuid_generate_v4(),             -- UUIDv4 as the primary key
+    dispatched_by VARCHAR(255) NOT NULL,                     -- FK to ccc_user_masterfile.user_id
+    dispatched_to_nic VARCHAR(50) NOT NULL,                  -- NIC (National Identity Card) of the person receiving the license
+    dispatched_to_name VARCHAR(255) NOT NULL,                -- Full name of the person receiving the license
+    dispatched_to_mobile_number VARCHAR(15),                  -- Mobile number of the person receiving the license
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,  -- Timestamp when the license was dispatched
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,  -- Timestamp for the last update
+    is_deleted BOOLEAN DEFAULT FALSE,                         -- Soft delete flag (TRUE for deleted, FALSE for active)
+    dispatched_status license_dispatched_status NOT NULL DEFAULT 'PENDING',  -- Status of the dispatch using ENUM
+    dispatched_method license_dispatched_method NOT NULL,    -- Method of dispatch using ENUM
+    remarks TEXT,                                            -- Any additional remarks or notes regarding the dispatch
+    FOREIGN KEY (dispatched_by) REFERENCES ccc_user_masterfile(user_id) ON DELETE CASCADE  -- Foreign key referencing ccc_user_masterfile
+);

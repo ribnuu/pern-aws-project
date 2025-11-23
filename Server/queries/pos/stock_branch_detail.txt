@@ -1,0 +1,11 @@
+CREATE TABLE stock_branch_detail (
+    branch_code CHAR(4) PRIMARY KEY,                      -- Primary Key with exactly 4 characters, starting from 0001
+    company_id CHAR(4) REFERENCES stock_branch_header(company_code) ON DELETE SET NULL, -- Foreign Key
+    name VARCHAR(255),                                   -- Adjust size as necessary for the branch name
+    address VARCHAR(500),                                -- Adjust size as necessary for the branch address
+    email VARCHAR(255),                                 -- Adjust size as necessary for the email address
+    phone VARCHAR(20),                                  -- Adjust size as necessary for the phone number
+    created_by VARCHAR(100),                            -- Adjust size as necessary for the created_by field
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,     -- Timestamp for when the record was created
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
