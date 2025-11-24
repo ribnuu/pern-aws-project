@@ -1,141 +1,147 @@
-# EC2 Backend Deployment - Quick Start Guide
+# EC2 Backend Deployment - Quick Reference Guide
 
-## 🚀 EC2 Instance Details
+## 📋 EC2 Instance Information
 - **Name:** Delta
-- **Instance ID:** i-0a12b230afd28eda6
-- **Public IP:** 16.170.208.146
-- **Public DNS:** ec2-16-170-208-146.eu-north-1.compute.amazonaws.com
+- **Public IP:** `16.170.208.146`
 - **Region:** eu-north-1 (Stockholm)
 - **Instance Type:** t3.micro
 - **OS:** Ubuntu 24.04 LTS
+- **Key Pair:** delta-key.pem
 
-## 📋 Prerequisites Checklist
-- [x] EC2 instance created and running
-- [ ] SSH key file (`delta-key.pem`) downloaded
-- [ ] RDS security group allows EC2 access
-- [ ] EC2 security group allows ports 80, 443, 4000
+## 🚀 Quick Start Deployment
 
-## 🔐 Step 1: Connect to EC2
+### Option A: Automated Setup (Recommended)
 
-### From Windows PowerShell/Command Prompt:
+#### Step 1: Connect to EC2
 ```powershell
-# If using PuTTY, convert .pem to .ppk first
-# Otherwise, use Git Bash or WSL
+# On Windows - Set SSH key permissions (Run as Administrator)
+cd path\to\your\delta-key.pem
+icacls .\delta-key.pem /reset
+icacls .\delta-key.pem /grant:r "$env:USERNAME":"(R)"
+icacls .\delta-key.pem /inheritance:r
 
+# Connect via SSH
 ssh -i "delta-key.pem" ubuntu@16.170.208.146
 ```
 
-### From Git Bash or WSL:
+When prompted "Are you sure you want to continue connecting", type `yes`
+
+#### Step 2: Run Automated Setup Script
 ```bash
-# Set correct permissions for key file
-chmod 400 delta-key.pem
-
-# Connect to EC2
-ssh -i "delta-key.pem" ubuntu@16.170.208.146
-```
-
-## 🛠️ Step 2: Automated Setup (Recommended)
-
-Once connected to EC2, run:
-
-```bash
-# Download the setup script
+# On EC2 instance
+cd ~
 wget https://raw.githubusercontent.com/ribnuu/pern-aws-project/main/ec2-setup.sh
-
-# Make it executable
 chmod +x ec2-setup.sh
-
-# Run the script
 ./ec2-setup.sh
 ```
 
-**The script will automatically:**
-1. Update system packages
-2. Install Node.js 18.x
-3. Install PM2 process manager
-4. Install Git and Nginx
-5. Clone your repository
-6. Create `.env` file with correct configuration
-7. Install npm dependencies
-8. Start backend with PM2
-9. Configure Nginx reverse proxy
+### Option B: Manual Setup
 
-## 🔧 Step 3: Manual Setup (Alternative)
+#### Step 1: Connect to EC2 (Same as above)
 
-If you prefer manual setup, follow these commands:
-
-### 3.1 Update System
+#### Step 2: Update System & Install Dependencies
 ```bash
+# Update system
 sudo apt update && sudo apt upgrade -y
-```
 
-### 3.2 Install Node.js
-```bash
+# Install Node.js 18
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt install -y nodejs
-node --version  # Should show v18.x
-```
 
-### 3.3 Install PM2 and Git
-```bash
+# Install PM2, Git, PostgreSQL Client, Nginx
 sudo npm install -g pm2
-sudo apt install -y git nginx
+sudo apt install -y git postgresql-client nginx
+
+# Verify installations
+node --version    # Should show v18.x
+npm --version
+pm2 --version
+nginx -v
 ```
 
-### 3.4 Clone Repository
+#### Step 3: Clone Repository
 ```bash
+cd ~
 git clone https://github.com/ribnuu/pern-aws-project.git
 cd pern-aws-project/Server
 ```
 
-### 3.5 Create .env File
+#### Step 4: Create .env File
 ```bash
 nano .env
 ```
 
 Paste this content:
 ```env
+# AWS RDS PRODUCTION CONFIGURATION
 NODE_ENV=PRODUCTION
 PORT=4000
 
-# Database Configuration
-DB_USER=postgres
 DB_HOST=pos-ccc-db-prod.cromc6kag7po.eu-north-1.rds.amazonaws.com
-DB_NAME=ccc
-DB_PASSWORD=Tmabdulmalik$51
 DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=Tmabdulmalik$51
+DB_NAME=ccc
 
 # Duke Database Configuration
-DB_DUKE_USER=postgres
 DB_DUKE_HOST=pos-ccc-db-prod.cromc6kag7po.eu-north-1.rds.amazonaws.com
-DB_DUKE_NAME=pos_database_duke
-DB_DUKE_PASSWORD=Tmabdulmalik$51
 DB_DUKE_PORT=5432
+DB_DUKE_USER=postgres
+DB_DUKE_PASSWORD=Tmabdulmalik$51
+DB_DUKE_NAME=pos_database_duke
 
-# CORS Configuration
-CORS_ORIGIN=*
+# SMS Provider
+HUTCH_SMS_PROVIDER_AUTH_URL=https://bsms.hutch.lk/api/login
+HUTCH_SMS_PROVIDER_SEND_SMS_URL=https://bsms.hutch.lk/api/sendsms
+HUTCH_SMS_PROVIDER_SEND_RENEW_TOKEN_URL=https://bsms.hutch.lk/api/token/accessToken
+HUTCH_SMS_PROVIDER_USER_NAME=ceo@eforce.lk
+HUTCH_SMS_PROVIDER_PASSWORD=Aeroplane$1
+
+# Frontend
+FRONTEND_HOSTED_URL=http://16.170.208.146
 ```
 
-Save: `Ctrl+X`, then `Y`, then `Enter`
+Save: `Ctrl+O`, Enter, then `Ctrl+X` to exit
 
-### 3.6 Install Dependencies and Start
+#### Step 5: Test Database Connection
 ```bash
-npm install
-pm2 start index.js --name pos-backend
-pm2 save
-pm2 startup
+PGPASSWORD='Tmabdulmalik$51' psql -h pos-ccc-db-prod.cromc6kag7po.eu-north-1.rds.amazonaws.com -U postgres -d ccc -c "SELECT version();"
 ```
 
-### 3.7 Configure Nginx
+**Important:** If this fails, check AWS RDS Security Group:
+- Go to AWS Console → RDS → Database → Security Groups
+- Add inbound rule: PostgreSQL (5432) from EC2 security group or EC2 IP
+
+#### Step 6: Install Dependencies & Start Backend
+```bash
+# Install npm packages
+npm install
+
+# Start with PM2
+pm2 start index.js --name "pos-backend"
+
+# View logs (check for "Connected to database" messages)
+pm2 logs pos-backend --lines 50
+```
+
+If you see errors, press `Ctrl+C` and check logs again.
+
+#### Step 7: Configure PM2 Auto-Start
+```bash
+pm2 startup
+pm2 save
+```
+
+#### Step 8: Configure Nginx
 ```bash
 sudo nano /etc/nginx/sites-available/pos-backend
 ```
 
-Paste this:
+Paste this configuration:
 ```nginx
 server {
     listen 80;
-    server_name 16.170.208.146 ec2-16-170-208-146.eu-north-1.compute.amazonaws.com;
+    server_name _;
 
     location / {
         proxy_pass http://localhost:4000;
@@ -151,186 +157,174 @@ server {
 }
 ```
 
-Enable and start:
+Save and exit (`Ctrl+O`, Enter, `Ctrl+X`)
+
+#### Step 9: Enable Nginx Configuration
 ```bash
+# Enable site
 sudo ln -s /etc/nginx/sites-available/pos-backend /etc/nginx/sites-enabled/
+
+# Remove default config
 sudo rm /etc/nginx/sites-enabled/default
+
+# Test configuration
 sudo nginx -t
+
+# Restart nginx
 sudo systemctl restart nginx
 sudo systemctl enable nginx
-```
 
-## 🔒 Step 4: Update RDS Security Group
-
-### CRITICAL: Allow EC2 to Access RDS
-
-1. Go to AWS Console → EC2 → Instances
-2. Click on "Delta" instance
-3. Go to **Security** tab
-4. Note the **Security Group ID** (something like `sg-xxxxxxxxx`)
-
-5. Go to AWS Console → RDS → Databases
-6. Click on `pos-ccc-db-prod`
-7. Go to **Connectivity & security** tab
-8. Click on the **VPC security groups** link (sg-07132512f16590f0c)
-9. Click **Edit inbound rules**
-10. Add/Update rule:
-    - **Type:** PostgreSQL
-    - **Port:** 5432
-    - **Source:** Custom → Select the EC2 security group ID from step 4
-    - **Description:** Allow from EC2 Delta instance
-11. Click **Save rules**
-
-### Also Add Your Current IP (for local testing):
-- **Type:** PostgreSQL
-- **Port:** 5432
-- **Source:** My IP (123.231.63.172/32)
-- **Description:** Allow from local development
-
-## ✅ Step 5: Verify Deployment
-
-### On EC2:
-```bash
-# Check PM2 status
-pm2 status
-pm2 logs pos-backend
-
-# Test local connection
-curl http://localhost:4000
-
-# Check Nginx status
+# Check status
 sudo systemctl status nginx
 ```
 
-### From Your Browser:
-- Backend API: http://16.170.208.146/
-- Or: http://ec2-16-170-208-146.eu-north-1.compute.amazonaws.com/
-
-### Test Database Connection:
-```bash
-# On EC2, run:
-cd ~/pern-aws-project/Server
-node -e "const db = require('./config/db'); db.client.connect().then(() => console.log('DB Connected!')).catch(err => console.error(err));"
-```
-
-## 🎯 Step 6: Update Frontend Configuration
-
-Update your local `client/.env` file:
-```env
-VITE_NODE_SERVER_ENDPOINT=http://16.170.208.146
-```
-
-Restart your local frontend:
+#### Step 10: Test Backend API
+From your **local Windows machine**:
 ```powershell
-cd C:\ccc\client
-npm run dev
+# Test basic connectivity
+curl http://16.170.208.146/
+
+# Or open in browser
+Start-Process "http://16.170.208.146/"
 ```
 
-## 📊 Useful PM2 Commands
+## 🔧 Important AWS Security Group Configuration
 
+### RDS Security Group
+Your RDS must allow connections from EC2:
+
+1. Go to **AWS Console → RDS → Databases**
+2. Click on `pos-ccc-db-prod`
+3. Click on the **VPC security group**
+4. Edit **Inbound rules**
+5. Add rule:
+   - **Type:** PostgreSQL
+   - **Port:** 5432
+   - **Source:** EC2 security group (sg-xxx) OR EC2 Private IP (172.31.40.107/32)
+   - **Description:** Allow from EC2 Delta instance
+
+### EC2 Security Group
+Your EC2 instance already has these rules (verify):
+- SSH (22) - From your IP
+- HTTP (80) - From anywhere (0.0.0.0/0)
+- HTTPS (443) - From anywhere (0.0.0.0/0)
+
+## 📊 Monitoring & Troubleshooting
+
+### Check Backend Status
 ```bash
-pm2 list                  # List all processes
-pm2 logs pos-backend      # View real-time logs
-pm2 logs pos-backend --lines 100  # View last 100 lines
-pm2 restart pos-backend   # Restart backend
-pm2 stop pos-backend      # Stop backend
-pm2 start pos-backend     # Start backend
-pm2 delete pos-backend    # Remove process
-pm2 monit                 # Real-time monitoring
-pm2 save                  # Save current process list
-```
-
-## 🔄 Updating Your Code on EC2
-
-When you push changes to GitHub:
-
-```bash
-# SSH into EC2
-ssh -i "delta-key.pem" ubuntu@16.170.208.146
-
-# Navigate to project
-cd pern-aws-project/Server
-
-# Pull latest changes
-git pull
-
-# Install any new dependencies
-npm install
-
-# Restart backend
-pm2 restart pos-backend
-
-# Check logs
+# On EC2
+pm2 status
 pm2 logs pos-backend
 ```
 
-## 🐛 Troubleshooting
-
-### Backend Not Starting
+### Check Nginx Status
 ```bash
-pm2 logs pos-backend --err  # Check error logs
-pm2 restart pos-backend     # Try restarting
+sudo systemctl status nginx
+sudo tail -f /var/log/nginx/error.log
+sudo tail -f /var/log/nginx/access.log
 ```
 
-### Database Connection Issues
+### Restart Services
 ```bash
-# Test RDS connectivity
-nc -zv pos-ccc-db-prod.cromc6kag7po.eu-north-1.rds.amazonaws.com 5432
+# Restart backend
+pm2 restart pos-backend
 
-# Check .env file
-cat .env
+# Restart Nginx
+sudo systemctl restart nginx
 
-# Verify security group allows EC2 access
+# View backend logs
+pm2 logs pos-backend --lines 100
 ```
 
-### Nginx Issues
+### Test Database Connection
 ```bash
-sudo nginx -t               # Test configuration
-sudo systemctl status nginx # Check status
-sudo tail -f /var/log/nginx/error.log  # View errors
+PGPASSWORD='Tmabdulmalik$51' psql -h pos-ccc-db-prod.cromc6kag7po.eu-north-1.rds.amazonaws.com -U postgres -d ccc
 ```
 
-### Port 4000 Not Accessible
-Check EC2 Security Group allows port 4000 from your IP:
-1. EC2 Console → Security Groups
-2. Find the security group attached to Delta
-3. Edit Inbound Rules
-4. Add: Custom TCP, Port 4000, Source: 0.0.0.0/0
+### Common Issues
 
-## 📝 Architecture Overview
+#### 1. Database Connection Timeout
+**Problem:** Backend can't connect to RDS
+**Solution:** Update RDS security group to allow EC2 IP
 
-```
-Internet
-    ↓
-Nginx (Port 80) on EC2
-    ↓
-Node.js Backend (Port 4000) on EC2
-    ↓
-PostgreSQL RDS (Port 5432)
+#### 2. Port 4000 Already in Use
+**Problem:** Backend won't start
+**Solution:**
+```bash
+pm2 delete pos-backend
+sudo lsof -i :4000
+sudo kill -9 <PID>
+pm2 start index.js --name "pos-backend"
 ```
 
-## 🎉 Success Indicators
+#### 3. Nginx 502 Bad Gateway
+**Problem:** Nginx can't reach backend
+**Solution:**
+```bash
+# Check if backend is running
+pm2 status
+pm2 restart pos-backend
 
-✅ PM2 shows "online" status
-✅ `curl http://localhost:4000` returns response
-✅ Backend logs show "Connected to the ccc database"
-✅ Backend logs show "Connected to the duke database"
-✅ Browser can access http://16.170.208.146/
-✅ Frontend can make API calls to EC2 backend
+# Check Nginx config
+sudo nginx -t
+sudo systemctl restart nginx
+```
 
-## 📞 Quick Reference
+## 🔄 Updating Deployment
 
-| Resource | Value |
-|----------|-------|
-| EC2 Public IP | 16.170.208.146 |
-| EC2 DNS | ec2-16-170-208-146.eu-north-1.compute.amazonaws.com |
-| Backend Port | 4000 |
-| RDS Endpoint | pos-ccc-db-prod.cromc6kag7po.eu-north-1.rds.amazonaws.com |
-| RDS Port | 5432 |
-| Database 1 | ccc |
-| Database 2 | pos_database_duke |
-| Region | eu-north-1 (Stockholm) |
+When you push changes to GitHub:
+```bash
+# On EC2
+cd ~/pern-aws-project
+git pull
+cd Server
+npm install  # Only if package.json changed
+pm2 restart pos-backend
+```
 
----
+## 🎯 Next Steps
 
-**Need help?** Check PM2 logs: `pm2 logs pos-backend`
+After backend is running:
+1. ✅ Test API endpoints: `http://16.170.208.146/api/...`
+2. Update frontend `.env` to point to EC2 IP
+3. Deploy frontend to S3/CloudFront
+4. Configure custom domain (optional)
+5. Setup SSL/HTTPS with Let's Encrypt (optional)
+
+## 📝 Useful PM2 Commands
+
+```bash
+pm2 list                    # List all processes
+pm2 status                  # Show status
+pm2 logs pos-backend        # View logs
+pm2 logs pos-backend --err  # View error logs only
+pm2 restart pos-backend     # Restart
+pm2 stop pos-backend        # Stop
+pm2 delete pos-backend      # Remove from PM2
+pm2 monit                   # Real-time monitoring
+pm2 save                    # Save current process list
+```
+
+## 🌐 Testing Checklist
+
+- [ ] SSH connection works
+- [ ] Node.js and npm installed
+- [ ] PM2 installed and running
+- [ ] Repository cloned
+- [ ] .env file created with correct credentials
+- [ ] Database connection successful
+- [ ] npm install completed
+- [ ] Backend started with PM2
+- [ ] PM2 auto-start configured
+- [ ] Nginx installed and configured
+- [ ] Backend accessible via public IP
+- [ ] API endpoints return expected responses
+
+## 📞 Support
+
+If you encounter issues:
+1. Check PM2 logs: `pm2 logs pos-backend`
+2. Check Nginx logs: `sudo tail -f /var/log/nginx/error.log`
+3. Verify security groups in AWS Console
+4. Test database connection from EC2
