@@ -32,11 +32,11 @@ const db_port = process.env.DB_PORT;
 const isProduction = process.env.NODE_ENV === "PRODUCTION";
 
 const dbDukeClient = new Client({
-  host: db_host,
-  user: db_user,
-  port: db_port,
-  password: db_pass,
-  database: "pos_database_duke",
+  host: process.env.DB_DUKE_HOST || db_host,
+  user: process.env.DB_DUKE_USER || db_user,
+  port: parseInt(process.env.DB_DUKE_PORT || db_port, 10),
+  password: process.env.DB_DUKE_PASSWORD || db_pass,
+  database: process.env.DB_DUKE_NAME || "pos_database_duke",
   ssl: isProduction
     ? {
         rejectUnauthorized: false, // Adjust this based on your SSL requirements

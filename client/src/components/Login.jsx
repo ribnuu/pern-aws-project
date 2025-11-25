@@ -314,13 +314,12 @@ const Login = (props) => {
                         Sign in
                       </button> */}
                       {/* <LISpinnerWithText loadingText="Sign In" /> */}
-                      <button type="submit" className="w-full">
-                        <LIButtonWithText
-                          loading={isLoading}
-                          loadingText={"Loading..."}
-                          labelText={"Sign in"}
-                        />
-                      </button>
+                      <LIButtonWithText
+                        type="submit"
+                        loading={isLoading}
+                        loadingText={"Loading..."}
+                        labelText={"Sign in"}
+                      />
                       <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                         Don’t have an account yet?{" "}
                         <Link
@@ -410,13 +409,12 @@ const Login = (props) => {
                   >
                     Sign in
                   </button> */}
-                  <button type="submit" className="w-full">
-                    <LIButtonWithText
-                      loading={isLoading}
-                      loadingText={"Loading..."}
-                      labelText={"Sign in"}
-                    />
-                  </button>
+                  <LIButtonWithText
+                    type="submit"
+                    loading={isLoading}
+                    loadingText={"Loading..."}
+                    labelText={"Sign in"}
+                  />
                   <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                     Don’t have an account yet?{" "}
                     <Link

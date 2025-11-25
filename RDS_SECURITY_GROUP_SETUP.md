@@ -1,5 +1,7 @@
 # AWS RDS Security Group Configuration
+
 # =======================================
+
 # This guide helps you allow EC2 instance to connect to RDS
 
 ## 🔒 Security Group Update Required
@@ -7,12 +9,14 @@
 Your EC2 instance needs permission to connect to your RDS database.
 
 ### EC2 Instance Details
+
 - **Instance ID:** i-0a12b230afd28eda6
 - **Private IP:** 172.31.40.107
 - **Public IP:** 16.170.208.146
 - **Security Group:** Check EC2 console
 
 ### RDS Instance Details
+
 - **Endpoint:** pos-ccc-db-prod.cromc6kag7po.eu-north-1.rds.amazonaws.com
 - **Current Security Group:** sg-07132512f16590f0c
 - **Region:** eu-north-1 (Stockholm)
@@ -22,22 +26,27 @@ Your EC2 instance needs permission to connect to your RDS database.
 ### Option 1: Via AWS Console (Recommended)
 
 1. **Go to AWS RDS Console**
+
    - Navigate to: https://eu-north-1.console.aws.amazon.com/rds/
    - Region: eu-north-1 (Stockholm)
 
 2. **Select Your Database**
+
    - Click on database: `pos-ccc-db-prod`
    - Go to **Connectivity & security** tab
 
 3. **Edit Security Group**
+
    - Under "Security", click on the security group link (sg-07132512f16590f0c)
    - This opens EC2 Security Groups page
 
 4. **Edit Inbound Rules**
+
    - Click **Edit inbound rules** button
    - Look for existing PostgreSQL rule (port 5432)
 
 5. **Add EC2 Access Rule**
+
    - Click **Add rule**
    - Configure:
      - **Type:** PostgreSQL
@@ -46,16 +55,19 @@ Your EC2 instance needs permission to connect to your RDS database.
      - **Source:** Choose one of these options:
 
    **Option A: By Security Group (Recommended for Production)**
+
    - Type: Custom
    - Source: Select EC2 instance's security group
    - Description: "Allow from EC2 Delta instance"
-   
+
    **Option B: By Private IP (More Restrictive)**
+
    - Type: Custom
    - Source: 172.31.40.107/32
    - Description: "Allow from EC2 Delta private IP"
-   
+
    **Option C: By Public IP (If private IP doesn't work)**
+
    - Type: Custom
    - Source: 16.170.208.146/32
    - Description: "Allow from EC2 Delta public IP"
@@ -103,6 +115,7 @@ PGPASSWORD='Tmabdulmalik$51' psql \
 ```
 
 Expected output:
+
 ```
 PostgreSQL 14.13 on aarch64-unknown-linux-gnu...
 ```
@@ -112,6 +125,7 @@ PostgreSQL 14.13 on aarch64-unknown-linux-gnu...
 ### Connection Still Fails?
 
 1. **Check VPC Configuration**
+
    ```bash
    # Both EC2 and RDS should be in same VPC
    # EC2 VPC: vpc-00053cbd77b05c087
@@ -119,14 +133,17 @@ PostgreSQL 14.13 on aarch64-unknown-linux-gnu...
    ```
 
 2. **Check Network ACLs**
+
    - Go to VPC → Network ACLs
    - Ensure port 5432 is allowed
 
 3. **Check RDS Public Accessibility**
+
    - RDS → Database → Connectivity
    - If "Publicly accessible" is No, EC2 must be in same VPC
 
 4. **Verify Security Group Changes Applied**
+
    - Wait 20-30 seconds after making changes
    - Check the inbound rules list shows your new rule
 
@@ -181,15 +198,18 @@ traceroute pos-ccc-db-prod.cromc6kag7po.eu-north-1.rds.amazonaws.com
 ## 🎯 Best Practices
 
 1. **Use Security Group References** (not IPs)
+
    - More secure and flexible
    - Automatically updates if instances change
 
 2. **Separate Security Groups**
+
    - One for EC2 (web tier)
    - One for RDS (database tier)
    - Follow principle of least privilege
 
 3. **Document Changes**
+
    - Use descriptive names for rules
    - Add descriptions explaining purpose
 

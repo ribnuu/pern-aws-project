@@ -12,7 +12,6 @@ import {
   getStockCustomerInstitutionDataByMobileNumber,
 } from "../../../apis/PointOfSalesApiService";
 import { values } from "lodash";
-import { data } from "autoprefixer";
 import { CiSearch } from "react-icons/ci";
 
 const BillingScreenCustomerInfoInput = () => {

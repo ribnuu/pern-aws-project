@@ -12,13 +12,14 @@ const LIButtonWithText = ({
   loadingText,
   labelText,
   buttonColor = "bg-primary-600",
+  type = "button",
 }) => {
   return (
     <>
       <button
         style={{ fontFamily: "sans-serif" }}
         disabled={loading} // Disables the button when loading is true
-        type="button"
+        type={type}
         // className="w-full bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 bg-blue-700  text-white "
         className={`w-full ${buttonColor} hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xs px-5 py-1.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 bg-blue-700  text-white`}
         // className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-flex items-center"

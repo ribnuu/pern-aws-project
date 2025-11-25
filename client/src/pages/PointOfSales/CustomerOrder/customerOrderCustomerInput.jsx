@@ -9,7 +9,6 @@ import StockCustomerInstitutionSearch from "../StockCustomerInstitutionSearch/St
 import UsersInThePOSCompanySearch from "../UsersInThePOSCompanySearch/UsersInThePOSCompanySearch";
 import { getStockCustomerInstitutionDataByMobileNumber } from "../../../apis/PointOfSalesApiService";
 import { values } from "lodash";
-import { data } from "autoprefixer";
 import { CiSearch } from "react-icons/ci";
 
 const CustomerOrderCustomerInfoInput = () => {

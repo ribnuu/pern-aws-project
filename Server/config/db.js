@@ -15,7 +15,7 @@ const client = new Client({
   user: db_user,
   port: parseInt(db_port, 10), // Convert port to integer
   password: db_pass,
-  database: "database",
+  database: process.env.DB_NAME || "ccc", // Use DB_NAME from .env or default to 'ccc'
   ssl: isProduction // Use SSL only in production
     ? {
         rejectUnauthorized: false, // Adjust this based on your SSL requirements

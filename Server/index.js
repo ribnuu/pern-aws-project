@@ -18,14 +18,27 @@ const certPath = "C:/node_pol.lk/node_pol_lk.crt";
 const caPath = "C:/node_pol.lk/node_pol_lk.ca-bundle";
 const keyPath = "C:/node_pol.lk/node_pol_lk.key";
 
-// Define HTTPS options only if in production
+// Define HTTPS options only if in production AND certificates exist
 let httpsOptions = {};
-if (isProduction) {
+let useHTTPS = false;
+
+if (
+  isProduction &&
+  fs.existsSync(certPath) &&
+  fs.existsSync(caPath) &&
+  fs.existsSync(keyPath)
+) {
   httpsOptions = {
     cert: fs.readFileSync(certPath),
     ca: fs.readFileSync(caPath),
     key: fs.readFileSync(keyPath),
   };
+  useHTTPS = true;
+  console.log("SSL certificates found - will use HTTPS");
+} else if (isProduction) {
+  console.log(
+    "Production mode but SSL certificates not found - will use HTTP on port 4000"
+  );
 }
 
 const app = express();
@@ -63,16 +76,16 @@ cron.schedule("*/1 * * * *", () => {
 app.use(routes);
 
 // Listen for HTTP or HTTPS requests
-if (isProduction) {
-  // Start HTTPS server if in production
+if (useHTTPS) {
+  // Start HTTPS server if SSL certificates are available
   const httpsServer = https.createServer(httpsOptions, app);
   httpsServer.listen(443, hostname, () => {
     console.log("HTTPS server running on port 443");
   });
 } else {
-  // Start HTTP server for non-production (development)
+  // Start HTTP server for development or when SSL certificates are not available
   const httpServer = http.createServer(app);
   httpServer.listen(4000, hostname, () => {
-    console.log("HTTP server running on port 80");
+    console.log("HTTP server running on port 4000");
   });
 }
