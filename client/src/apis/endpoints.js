@@ -5,6 +5,8 @@ let baseUrl = `http://${server_endpoint}:4000/api`;
 
 if (environment === "PRODUCTION") {
   baseUrl = `https://${server_endpoint}/api`;
+} else if (environment === "AWS_EC2") {
+  baseUrl = `http://${server_endpoint}/api`;
 }
 
 export const BASE_URL = baseUrl;
